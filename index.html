@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Doctrine 2 ORM and Zend Framework 2 tutorial</title>
+
+		<meta name="description" content="A tutorial about integrating Doctrine2 with ZF2 through DoctrineModule">
+		<meta name="author" content="Marco Pivetta">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<link rel="stylesheet" href="reveal.js/css/reveal.min.css">
+		<link rel="stylesheet" href="reveal.js/css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="reveal/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="reveal.js/lib/js/html5shiv.js"></script>
+		<![endif]-->
+
+        <style type="text/css">
+            .reveal section img {
+                border: 0;
+                background: none;
+                box-shadow: 0 0 #000;
+            }
+
+            .zf-color {
+                color: #68B604;
+            }
+
+            .doctrine-color {
+                color: #FC6A31;
+            }
+
+        </style>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+                <section>
+                    <h1>
+                        <span class="doctrine-color">Doctrine 2</span>
+                        &amp;
+                        <span class="zf-color">ZF2</span>
+                    </h1>
+                    <h1>
+                        <img
+                            src="assets/img/doctrine.svg"
+                            alt="Doctrine 2 ORM" border="0"
+                            height="200px"
+                            style="margin-bottom: -50px; "
+                        />
+                        +
+                        <img
+                            src="assets/img/zf-logo-large.png"
+                            alt="Zend Framework 2"
+                            border="0"
+                            height="200px"
+                            style="margin-bottom: -50px;"
+                        />
+                    </h1>
+                </section>
+				<section>
+					<h2>
+                        <img
+                            src="assets/img/ocramius.gif"
+                            alt="Marco Pivetta"
+                            style="width: 50px"
+                        />
+                        Marco Pivetta
+                    </h2>
+					<p>
+                        <ul>
+                            <li>
+                                <span class="doctrine-color">Doctrine</span> core team
+                            </li>
+                            <li>
+                                <span class="zf-color">Zf2</span> contributor
+                            </li>
+                            <li>
+                                <span class="zf-color">Modules</span> developer
+                                <ul>
+                                    <li>OcraDiCompiler</li>
+                                    <li>OcraServiceManager</li>
+                                    <li>OcraCachedViewResolver</li>
+                                    <li>DoctrineModule</li>
+                                    <li>DoctrineORMModule</li>
+                                    <li>DoctrineMongoODMModule</li>
+                                </ul>
+                            </li>
+                        </ul>
+					</p>
+                    <p>
+                        <!-- @todo add twitter/github glyphicons here -->
+                        <a href="http://twitter.com/Ocramius" target="_blank">@Ocramius</a>
+                        -
+                        <a href="http://github.com/Ocramius" target="_blank">Ocramius</a>
+                    </p>
+				</section>
+
+                <section>
+                    <h2>What is <span class="doctrine-color">Doctrine ORM</span>?</h2>
+                    <p>
+                        <span class="doctrine-color">Doctrine ORM</span> is an Object Relational Mapper
+                        inspired by Hibernate and <abbr title="Java Persistece API">JPA</abbr>
+                        (JSR-317) from the Java community.
+                    </p>
+                    <p>
+                        It is based on a powerful
+                        <abbr title="Database Abstraction Layer" class="doctrine-color">DBAL</abbr>
+                        (DataBase Abstraction Layer) and allows
+                        developers to save and load <abbr title="Plain Old PHP Object">POPO</abbr>
+                        (Plain Old PHP Objects) from an SQL database.
+                    </p>
+
+                    <aside class="notes">
+                        Also explain about multiple platforms.
+                    </aside>
+                </section>
+
+                <section>
+                    <p>
+                        Simple put:
+                    </p>
+                    <h2 class="doctrine-color">Forget the database!</h2>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Examples using the <span class="doctrine-color">ORM</span></h2>
+                    </section>
+
+                    <section>
+                        <h3>The User <span class="doctrine-color">Entity</span></h3>
+                        <pre><code contenteditable>/** @ORM\Entity */
+class User {
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
+     */
+    protected $id;
+
+    /** @ORM\Column(type="string") */
+    protected $fullName;
+
+    // getters/setters
+}</code></pre>
+
+                    </section>
+
+                    <section>
+                        <h3><span class="doctrine-color">Persisting</span> an object</h3>
+                        <pre><code contenteditable>$em = EntityManager::create(/* not your problem */);
+
+$user = new User();
+$user->setFullName('Marco Pivetta');
+
+$em->persist($user); // status of $user1 is now "<span class="doctrine-color">managed</span>"
+$em->flush(); // commit changes to db
+
+var_dump($user1->getId()); // 1</code></pre>
+                    </section>
+                    <section>
+                        <h3><span class="doctrine-color">Persisting</span> multiple objects</h3>
+                        <pre><code contenteditable>$user1 = new User();
+$user1->setFullName('Marco Pivetta');
+$em->persist($user1);
+
+$user2 = new User();
+$user2->setFullName('Michaël Gallego');
+$em->persist($user2);
+
+$user3 = new User();
+$user3->setFullName('Kyle Spraggs');
+$em->persist($user3);
+
+$em->flush();</code></pre>
+                    </section>
+                    <section>
+                        <h3>Retrieving an object</h3>
+                        <pre><code contenteditable>$user1 = $em->find('User', 1);
+
+var_dump($user1->getFullName()); // Marco Pivetta
+
+$user2 = $em
+    ->getRepository('User')
+    ->findOneBy(array('fullName' => 'Michaël Gallego'));
+
+var_dump($user2->getFullName()); // Michaël Gallego</code></pre>
+                    </section>
+                    <section>
+                        <h3>Updating an object</h3>
+                        <pre><code contenteditable>$user = $em->find('User', 1);
+
+$user->setFullName('Guilherme Blanco');
+
+$em->flush();</code></pre>
+                    </section>
+                    <section>
+                        <h3>Deleting an object</h3>
+                        <pre><code contenteditable>$user = $em->find('User', 1);
+
+$em->remove($user);
+
+$em->flush();</code></pre>
+                        </section>
+                        <section>
+                            <h3><span class="doctrine-color">Associations</span> - User</h3>
+                        <pre><code contenteditable>/** @ORM\Entity */
+class User {
+    // like before
+
+    /** @ORM\ManyToOne(targetEntity="Address") */
+    protected $address;
+
+    /** @ORM\ManyToMany(targetEntity="Projects") */
+    protected $projects;
+
+    public function __construct()
+    {
+        $this->projects = new ArrayCollection();
+    }
+
+    // getters/setters
+}</code></pre>
+                    </section>
+                    <section>
+                        <h3><span class="doctrine-color">Associations</span> - Address</h3>
+                        <pre><code contenteditable>/** @ORM\Entity */
+class Address {
+    /* @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue(strategy="AUTO") */
+    protected $id;
+
+    /** @ORM\Column(type="string") */
+    protected $city;
+
+    /** @ORM\Column(type="string") */
+    protected $country;
+
+    // getters/setters etc.
+}</code></pre>
+                    </section>
+                    <section>
+                        <h3><span class="doctrine-color">Associations</span> - Projects</h3>
+<pre><code contenteditable>/** @ORM\Entity */
+class Project {
+    /* @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue(strategy="AUTO") */
+    protected $id;
+
+    /** @ORM\Column(type="string") */
+    protected $name;
+
+    // getters/setters
+}</code></pre>
+                    </section>
+                    <section>
+                        <h3><span class="doctrine-color">Associations</span> - Persisting associations</h3>
+<pre><code contenteditable>$user = new User();
+$user->setFullName('Marco Pivetta');
+$em->persist($user);
+
+$address = new Address();
+$address->setCity('Frankfurt')
+$address->setCountry('Germany');
+$em->persist($address);
+
+$project = new Project();
+$project->setName('Doctrine ORM');
+$em->persist($project);
+
+$user->setAddress($address);
+$user->getProjects()->add($project);
+$em->flush();</code></pre>
+                    </section>
+                    <section>
+                        <h3><span class="doctrine-color">Associations</span> - Retrieving associations</h3>
+<pre><code contenteditable>$user = $em->find('User', 1);
+
+var_dump($user->getAddress()->getCity()); // Frankfurt
+var_dump($user->getProjects()->first()->getName()) // Doctrine ORM</code></pre>
+                    </section>
+
+                    <!-- add "so you're telling me" meme -->
+                    <!-- add "yo dawg" meme here -->
+                    <section>
+                        More tutorials at
+                        <a href="http://marco-pivetta.com/doctrine2-orm-tutorial">
+                            http://marco-pivetta.com/doctrine2-orm-tutorial
+                        </a>
+                    </section>
+                </section>
+
+				<section>
+                    <h2>
+                        <span class="zf-color">Modules!</span>
+                    </h2>
+                    <p>
+                        The doctrine related modules are a <strong>thin</strong> integration layer
+                        between ZF2 and the ORM:
+                        <ul>
+                            <li>
+                                <span class="zf-color">DoctrineModule</span> provides basic functionality
+                                common to various doctrine sub-projects.
+                            </li>
+                            <li>
+                                <span class="zf-color">DoctrineORMModule</span> specifically provides you
+                                with the ORM
+                            </li>
+                        </ul>
+                    </p>
+				</section>
+
+                <section>
+                    <h2>Installation!</h2>
+                </section>
+
+                <section>
+                    <pre>
+                        <code contenteditable>php composer.phar install doctrine/doctrine-orm-module:0.*</code>
+                    </pre>
+                    <!-- add fancy installation munch munch image -->
+                </section>
+
+                <section>
+                    <pre>
+                        <code contenteditable>php composer.phar install zendframework/zend-developer-tools:dev-master@dev</code>
+                    </pre>
+                    <!-- add "thumbs up" meme -->
+                </section>
+
+				<section>
+                    <h3>Enabling the modules</h3>
+                    <p>In <code>config/application.config.php</code></p>
+<pre><code contenteditable>return array(
+    'modules' => array(
+        'ZendDeveloperTools',
+        'Application',
+        'DoctrineModule',
+        'DoctrineORMModule',
+    ),
+    // [...]
+);
+</code></pre>
+				</section>
+
+				<section>
+					<h2>Write your first entity</h2>
+                    <p>In <code>module/Application/src/Application/Entity/User</code></p>
+                    <pre><code contenteditable>
+namespace Application\Entity;
+
+/** @ORM\Entity */
+class User {
+    /**
+    * @ORM\Id
+    * @ORM\GeneratedValue(strategy="AUTO")
+    * @ORM\Column(type="integer")
+    */
+    protected $id;
+
+    /** @ORM\Column(type="string") */
+    protected $fullName;
+
+    // getters/setters
+}</code></pre>
+				</section>
+
+				<section>
+					<h2>Configure <span class="doctrine-color">mappings</span></h2>
+                    <p>in <code>module/Application/config/module.config.php</code>:</p>
+                    <pre><code contenteditable>return array(
+    'doctrine' => array(
+        'driver' => array(
+            'application_entities' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(__DIR__ . '/../src/Application/Entity')
+            ),
+
+            'orm_default' => array(
+                'drivers' => array(
+                    'Application\Entity' => 'application_entities'
+                )
+    ))), // [...]</code></pre>
+				</section>
+
+                <section>
+                    <h2>Configure <span class="doctrine-color">connection</span></h2>
+                    <p>in <code>config/autoload/doctrine.local.php</code>:</p>
+                    <pre><code contenteditable>return array(
+    'doctrine' => array(
+        'connection' => array(
+            'orm_default' => array(
+                'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
+                    'params' => array(
+                        'host'     => 'localhost',
+                        'port'     => '3306',
+                        'user'     => 'username',
+                        'password' => 'password',
+                        'dbname'   => 'database',
+))))));</code></pre>
+                </section>
+
+                <section>
+                    <h2>Generate the database</h2>
+                    <!-- insert "Oooooooh!" meme here -->
+                    <pre><code contenteditable>./vendor/bin/doctrine-module orm:schema-tool:create</code></pre>
+                </section>
+
+                <!-- add slide about mapping overview in ZDT -->
+
+                <section>
+                    <h2>Test it!</h2>
+                    <p>In <code>module/Application/src/Application/Controller/IndexController.php</code></p>
+                    <pre><code contenteditable>public function indexAction() {
+    $em = $this
+        ->getServiceLocator()
+        ->get('Doctrine\ORM\EntityManager');
+
+    $user = new User();
+    $user->setFullName('Marco Pivetta');
+
+    $em->persist($user);
+    $em->flush();
+
+    die(var_dump($user->getId()); // yes, I'm lazy
+}</code></pre>
+                </section>
+
+                <!-- Continue to module-specific stuff -->
+
+			</div>
+
+		</div>
+
+		<script src="reveal.js/lib/js/head.min.js"></script>
+		<script src="reveal.js/js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
