@@ -1,0 +1,10 @@
+Intro
+ - who I am
+ - what is doctrine project
+ - what is DoctrineModule/DoctrineORMModule/DoctrineMongoODMModule
+
+Setup
+ - download the skeleton application
+ - install doctrine-orm-module (or doctrine-mongo-odm-module)
+
+Playing with the controller
