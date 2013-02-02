@@ -374,15 +374,15 @@ class User {
                     <h2>Test it!</h2>
                     <pre><code>module/Application/src/Application/Controller/IndexController.php</code></pre>
                     <pre><code contenteditable>public function indexAction() {
-    $entityManager = $this
+    $objectManager = $this
         ->getServiceLocator()
         ->get('Doctrine\ORM\EntityManager');
 
     $user = new \Application\Entity\User();
     $user->setFullName('Marco Pivetta');
 
-    $entityManager->persist($user);
-    $entityManager->flush();
+    $objectManager->persist($user);
+    $objectManager->flush();
 
     die(var_dump($user->getId())); // yes, I'm lazy
 }</code></pre>
@@ -398,8 +398,8 @@ class User {
                         <pre><code contenteditable>$user = new User();
 $user->setFullName('Marco Pivetta');
 
-$entityManager->persist($user); // $user1 is now "<span class="doctrine-color">managed</span>"
-$em->flush(); // commit changes to db
+$objectManager->persist($user); // $user1 is now "<span class="doctrine-color">managed</span>"
+$objectManager->flush(); // commit changes to db
 
 var_dump($user1->getId()); // 1</code></pre>
                     </section>
@@ -407,25 +407,25 @@ var_dump($user1->getId()); // 1</code></pre>
                         <h3><span class="doctrine-color">Persisting</span> multiple objects</h3>
                         <pre><code contenteditable>$user1 = new User();
 $user1->setFullName('Marco Pivetta');
-$entityManager->persist($user1);
+$objectManager->persist($user1);
 
 $user2 = new User();
 $user2->setFullName('Michaël Gallego');
-$entityManager->persist($user2);
+$objectManager->persist($user2);
 
 $user3 = new User();
 $user3->setFullName('Kyle Spraggs');
-$entityManager->persist($user3);
+$objectManager->persist($user3);
 
-$entityManager->flush();</code></pre>
+$objectManager->flush();</code></pre>
                     </section>
                     <section>
                         <h3>Retrieving an object</h3>
-                        <pre><code contenteditable>$user1 = $em->find('User', 1);
+                        <pre><code contenteditable>$user1 = $objectManager->find('User', 1);
 
 var_dump($user1->getFullName()); // Marco Pivetta
 
-$user2 = $entityManager
+$user2 = $objectManager
     ->getRepository('User')
     ->findOneBy(array('fullName' => 'Michaël Gallego'));
 
@@ -433,19 +433,19 @@ var_dump($user2->getFullName()); // Michaël Gallego</code></pre>
                     </section>
                     <section>
                         <h3>Updating an object</h3>
-                        <pre><code contenteditable>$user = $entityManager->find('User', 1);
+                        <pre><code contenteditable>$user = $objectManager->find('User', 1);
 
 $user->setFullName('Guilherme Blanco');
 
-$entityManager->flush();</code></pre>
+$objectManager->flush();</code></pre>
                     </section>
                     <section>
                         <h3>Deleting an object</h3>
-                        <pre><code contenteditable>$user = $entityManager->find('User', 1);
+                        <pre><code contenteditable>$user = $objectManager->find('User', 1);
 
-$entityManager->remove($user);
+$objectManager->remove($user);
 
-$entityManager->flush();</code></pre>
+$objectManager->flush();</code></pre>
                         </section>
                         <section>
                             <h3><span class="doctrine-color">Associations</span> - User</h3>
@@ -500,24 +500,24 @@ class Project {
                         <h3><span class="doctrine-color">Associations</span> - Persisting associations</h3>
 <pre><code contenteditable>$user = new User();
 $user->setFullName('Marco Pivetta');
-$entityManager->persist($user);
+$objectManager->persist($user);
 
 $address = new Address();
 $address->setCity('Frankfurt')
 $address->setCountry('Germany');
-$entityManager->persist($address);
+$objectManager->persist($address);
 
 $project = new Project();
 $project->setName('Doctrine ORM');
-$entityManager->persist($project);
+$objectManager->persist($project);
 
 $user->setAddress($address);
 $user->getProjects()->add($project);
-$entityManager->flush();</code></pre>
+$objectManager->flush();</code></pre>
                     </section>
                     <section>
                         <h3><span class="doctrine-color">Associations</span> - Retrieving associations</h3>
-<pre><code contenteditable>$user = $entityManager->find('User', 1);
+<pre><code contenteditable>$user = $objectManager->find('User', 1);
 
 var_dump($user->getAddress()->getCity()); // Frankfurt
 var_dump($user->getProjects()->first()->getName()) // Doctrine ORM</code></pre>
@@ -707,8 +707,8 @@ var_dump($city->getCountry());
                     <h2>Inject the <span class="doctrine-color">Object Manager</span></h2>
                     <pre><code contenteditable>'factories' => array(
     'my_service' => function ($sl) {
-        $em = $sl->get('Doctrine\ORM\EntityManager');
-        return new MyService($em);
+        $objectManager = $sl->get('Doctrine\ORM\EntityManager');
+        return new MyService($objectManager);
     }
 ),</code></pre>
                     <pre><code contenteditable>class MyService
