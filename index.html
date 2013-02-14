@@ -133,7 +133,7 @@
                 <section>
                     <h2><span class="doctrine-color">Doctrine Project</span></h2>
                     <p>
-                        An incubator for persistence-oriented libraries
+                        An incubator for <span class="doctrine-color">persistence</span>-oriented libraries
                     </p>
                     <p>
                         <img src="https://secure.gravatar.com/avatar/d07a7a143b14fc8309f9abb78d569344?s=70" alt="asm89"/>
@@ -181,8 +181,15 @@
 
                     <aside class="notes">
                         Also consider that Doctrine ORM abstract the underlying SQL dialect of the DB platform you are
-                        using, so it's possible for you to switch DB vendor from a day to another.
+                        using, so it's possible for you to switch DB vendor from a day to another
                     </aside>
+                </section>
+
+                <section>
+                    <p>
+                        An <span class="doctrine-color">ORM</span> gives you the impression that you are working
+                        with a "virtual" database (graph) composed by objects
+                    </p>
                 </section>
 
                 <section>
@@ -334,14 +341,14 @@ class User {
   'doctrine' => array(
     'connection' => array(
       'orm_default' => array(
-        'driverClass' =>'Doctrine\DBAL\Driver\PDOMySql\Driver'
+        'driverClass' =>'Doctrine\DBAL\Driver\PDOMySql\Driver',
         'params' => array(
           'host'     => 'localhost',
           'port'     => '3306',
           'user'     => 'username',
           'password' => 'password',
           'dbname'   => 'database',
-))))));</code></pre>
+)))));</code></pre>
                 </section>
 
                 <section>
@@ -522,8 +529,6 @@ var_dump($user->getAddress()->getCity()); // Frankfurt
 var_dump($user->getProjects()->first()->getName()) // Doctrine ORM</code></pre>
                     </section>
 
-                    <!-- add "so you're telling me" meme -->
-                    <!-- add "yo dawg" meme here -->
                     <section>
                         <p>
                             More tutorials at
@@ -571,6 +576,28 @@ $paginator
     ->setItemCountPerPage(5);</code></pre>
                 </section>
 
+                <section>
+                    <h2>
+                        <span class="zf-color">Paginator</span> Adapter
+                        (<span class="doctrine-color">ORM</span>)
+                    </h2>
+                    <pre><code contenteditable>use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use Zend\Paginator\Paginator;
+
+// Create a Doctrine Collection
+$query = $em->createQuery('SELECT f FROM Foo f JOIN f.bar b');
+
+// Create the paginator itself
+$paginator = new Paginator(
+    new DoctrinePaginator(new ORMPaginator($query))
+);
+
+$paginator
+    ->setCurrentPageNumber(1)
+    ->setItemCountPerPage(5);</code></pre>
+                </section>
+
             <section>
                 <h2><span class="doctrine-color">Object-Exists</span> <span class="zf-color">Validator</span></h2>
                 <pre><code contenteditable>$repository = $objectManager
@@ -611,14 +638,14 @@ $hydrator = new DoctrineObject(
 );
 
 $city = new City();
-$data = array('name' => 'Milano');
+$data = array('name' => 'Frankfurt');
 
 $city = $hydrator->hydrate($data, $city);
 
-echo $city->getName(); // prints "Milano"
+echo $city->getName(); // prints "Frankfurt"
 
 $dataArray = $hydrator->extract($city);
-echo $dataArray['name']; // prints "Milano"</code></pre>
+echo $dataArray['name']; // prints "Frankfurt"</code></pre>
                 </section>
 
             <section>
@@ -637,7 +664,7 @@ $city = $hydrator->hydrate($data, $city);
 
 var_dump($city->getCountry());
 // prints class Country#1 (1) {
-//   protected $name => string(5) "Italy"
+//   protected $name => string(5) "Germany"
 // }</code></pre>
             </section>
 
@@ -702,6 +729,74 @@ var_dump($city->getCountry());
                     <p>over</p>
                     <pre><code contenteditable>Doctrine\ORM\EntityRepository</code></pre>
                 </section>
+
+                <section>
+                    <h2>Use <span class="doctrine-color">collections</span> extensively</h2>
+                    <p class="fragment">
+                        Doctrine comes with a powerful <span class="doctrine-color">collections</span>
+                        <a href="https://github.com/doctrine/collections" target="_blank">API</a>
+                    </p>
+                    <p class="fragment">
+                        OOP API for array-like data structures
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Use the <span class="doctrine-color">Criteria API</span></h2>
+                    <p class="fragment">
+                        Collections provide a <span class="doctrine-color">Criteria</span>
+                        <a href="https://github.com/doctrine/collections/blob/v1.0/lib/Doctrine/Common/Collections/Criteria.php" target="_blank">API</a>
+                    </p>
+                    <p class="fragment">
+                        Allows you to filter virtually any kind of data structure
+                    </p>
+                </section>
+
+                <section>
+                    <h2><span class="doctrine-color">Criteria API</span> example</h2>
+                    <pre><code contenteditable>use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ArrayCollection;
+
+$collection = new ArrayCollection(array($user1, $user2, $user3));
+$criteria   = new Criteria();
+$criteria->andWhere(
+    $criteria->expr()->gt(
+        'lastLogin',
+        new \DateTime('-1 day')
+    )
+);
+
+$recentVisitors = $collection->matching($criteria);</code></pre>
+                    <pre><code contenteditable>$recentVisitors = $em
+    ->getRepository('Application\Entity\Users')
+    ->matching($criteria);</code></pre>
+                </section>
+
+                <section>
+                    <h2><span class="doctrine-color">Criteria API</span> advantages</h2>
+                    <p class="fragment">
+                        Works in <span class="doctrine-color">ORM Repositories</span>,
+                        <span class="doctrine-color">Collections</span>, etc...
+                    </p>
+                    <p class="fragment">
+                        Abstracts the problem of "searching"
+                    </p>
+                    <p class="fragment">
+                        Same criteria for different storages (ORM, ODM, Memory, ElasticSearch, cache...)
+                    </p>
+                    <p class="fragment">
+                        Allows you to define your own <code>RecentUsersCriteria</code> or <code>InactiveUsersCriteria</code>...
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Inject the <span class="doctrine-color">Object Manager</span></h2>
+                    <p>
+                        If you fetch the entity manager from within your services, replacing it will become very hard:
+                        Inject it instead!
+                    </p>
+                </section>
+
                 <section>
                     <h2>Inject the <span class="doctrine-color">Object Manager</span></h2>
                     <pre><code contenteditable>'factories' => array(
@@ -714,8 +809,11 @@ var_dump($city->getCountry());
 {
     public function __construct(ObjectManager $objectManager)
     {
-        // [...]</code></pre>
+        // [...]
+    }
+}</code></pre>
                 </section>
+
                 <section>
                     <h2>Keep <span class="doctrine-color">Object Manager</span> out of <span class="zf-color">Controllers</span></h2>
                     <p>
@@ -725,11 +823,24 @@ var_dump($city->getCountry());
                         />
                     </p>
                 </section>
+
                 <section>
                     <h2>Don't use <span class="doctrine-color">persistence</span> to solve <span class="zf-color">application</span> problems</h2>
                     <p class="fragment">Filtering data when saved to DB</p>
+                    <p class="fragment">Validating data when saved to DB</p>
                     <p class="fragment">Saving files when records are saved to DB</p>
                     <p class="fragment">Using DB-level errors to check input validity</p>
+                </section>
+
+                <section>
+                    <h2>Keep your <span class="doctrine-color">object graph</span> consistent</h2>
+                    <p class="fragment">
+                        An <span class="doctrine-color">ObjectManager</span> works under the assumption that managed
+                        objects are valid!
+                    </p>
+                    <p class="fragment">
+                        Assign values to your entities only when data is valid!
+                    </p>
                 </section>
             </section>
 
