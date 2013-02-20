@@ -463,7 +463,7 @@ class User {
     /** @ORM\ManyToOne(targetEntity="Address") */
     protected $address;
 
-    /** @ORM\ManyToMany(targetEntity="Projects") */
+    /** @ORM\ManyToMany(targetEntity="Project") */
     protected $projects;
 
     public function __construct()
