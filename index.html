@@ -428,19 +428,19 @@ $objectManager->flush();</code></pre>
                     </section>
                     <section>
                         <h3>Retrieving an object</h3>
-                        <pre><code contenteditable>$user1 = $objectManager->find('User', 1);
+                        <pre><code contenteditable>$user1 = $objectManager->find('Application\Entity\User', 1);
 
 var_dump($user1->getFullName()); // Marco Pivetta
 
 $user2 = $objectManager
-    ->getRepository('User')
+    ->getRepository('Application\Entity\User')
     ->findOneBy(array('fullName' => 'Michaël Gallego'));
 
 var_dump($user2->getFullName()); // Michaël Gallego</code></pre>
                     </section>
                     <section>
                         <h3>Updating an object</h3>
-                        <pre><code contenteditable>$user = $objectManager->find('User', 1);
+                        <pre><code contenteditable>$user = $objectManager->find('Application\Entity\User', 1);
 
 $user->setFullName('Guilherme Blanco');
 
@@ -448,7 +448,7 @@ $objectManager->flush();</code></pre>
                     </section>
                     <section>
                         <h3>Deleting an object</h3>
-                        <pre><code contenteditable>$user = $objectManager->find('User', 1);
+                        <pre><code contenteditable>$user = $objectManager->find('Application\Entity\User', 1);
 
 $objectManager->remove($user);
 
@@ -524,7 +524,7 @@ $objectManager->flush();</code></pre>
                     </section>
                     <section>
                         <h3><span class="doctrine-color">Associations</span> - Retrieving associations</h3>
-<pre><code contenteditable>$user = $objectManager->find('User', 1);
+<pre><code contenteditable>$user = $objectManager->find('Application\Entity\User', 1);
 
 var_dump($user->getAddress()->getCity()); // Frankfurt
 var_dump($user->getProjects()->first()->getName()) // Doctrine ORM</code></pre>
