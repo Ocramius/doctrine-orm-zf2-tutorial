@@ -405,10 +405,10 @@ class User {
                         <pre><code contenteditable>$user = new User();
 $user->setFullName('Marco Pivetta');
 
-$objectManager->persist($user); // $user1 is now "<span class="doctrine-color">managed</span>"
+$objectManager->persist($user); // $user is now "<span class="doctrine-color">managed</span>"
 $objectManager->flush(); // commit changes to db
 
-var_dump($user1->getId()); // 1</code></pre>
+var_dump($user->getId()); // 1</code></pre>
                     </section>
                     <section>
                         <h3><span class="doctrine-color">Persisting</span> multiple objects</h3>
