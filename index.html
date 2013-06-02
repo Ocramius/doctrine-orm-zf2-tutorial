@@ -1,31 +1,31 @@
 <!doctype html>
 <html lang="en">
 
-	<head>
-		<meta charset="utf-8">
+    <head>
+        <meta charset="utf-8">
 
-		<title>Doctrine 2 ORM and Zend Framework 2 tutorial</title>
+        <title>Doctrine 2 ORM and Zend Framework 2 tutorial</title>
 
-		<meta name="description" content="A tutorial about integrating Doctrine2 with ZF2 through DoctrineModule">
-		<meta name="author" content="Marco Pivetta">
+        <meta name="description" content="A tutorial about integrating Doctrine2 with ZF2 through DoctrineModule">
+        <meta name="author" content="Marco Pivetta">
 
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-		<link rel="stylesheet" href="reveal.js/css/reveal.min.css">
-		<link rel="stylesheet" href="reveal.js/css/theme/default.css" id="theme">
+        <link rel="stylesheet" href="reveal.js/css/reveal.min.css">
+        <link rel="stylesheet" href="reveal.js/css/theme/default.css" id="theme">
         <!-- #040E27 -->
-		<!-- For syntax highlighting -->
-		<link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
 
-		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
-		<script>
-			document.write( '<link rel="stylesheet" href="reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
-		</script>
+        <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+        <script>
+            document.write( '<link rel="stylesheet" href="reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+        </script>
 
-		<!--[if lt IE 9]>
-		<script src="reveal.js/lib/js/html5shiv.js"></script>
-		<![endif]-->
+        <!--[if lt IE 9]>
+        <script src="reveal.js/lib/js/html5shiv.js"></script>
+        <![endif]-->
 
         <style type="text/css">
             /* overrides */
@@ -58,14 +58,14 @@
                 background-color: #040E27;
             }
         </style>
-	</head>
+    </head>
 
-	<body>
+    <body>
 
-		<div class="reveal">
+        <div class="reveal">
 
-			<!-- Any section element inside of this container is displayed as a slide -->
-			<div class="slides">
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
 
                 <section>
                     <h1>
@@ -90,8 +90,16 @@
                         />
                     </h1>
                 </section>
-				<section>
-					<h2>
+                <section>
+                    <p>
+                        Note: these slides are combined with a webcast that you can find on
+                        <a href="http://ocramius.github.io/blog/doctrine-2-orm-zf2-tutorial/" target="_blank">
+                            this page
+                        </a>.
+                    </p>
+                </section>
+                <section>
+                    <h2>
                         <img
                             src="assets/img/ocramius.gif"
                             alt="Marco Pivetta"
@@ -99,7 +107,7 @@
                         />
                         <a href="http://ocramius.github.com/" target="_blank" rel="me">Marco Pivetta</a>
                     </h2>
-					<p class="fragment">
+                    <p class="fragment">
                         <span class="doctrine-color">Doctrine</span> core team
                     </p>
                     <p class="fragment">
@@ -113,7 +121,7 @@
                         -
                         <a href="http://github.com/Ocramius" target="_blank">Ocramius</a>
                     </p>
-				</section>
+                </section>
                 <section>
                     <h2>Main Libraries</h2>
                     <p>
@@ -865,38 +873,38 @@ $recentVisitors = $collection->matching($criteria);</code></pre>
 
             </div>
 
-		</div>
+        </div>
 
-		<script src="reveal.js/lib/js/head.min.js"></script>
-		<script src="reveal.js/js/reveal.min.js"></script>
+        <script src="reveal.js/lib/js/head.min.js"></script>
+        <script src="reveal.js/js/reveal.min.js"></script>
 
-		<script>
+        <script>
 
-			// Full list of configuration options available here:
-			// https://github.com/hakimel/reveal.js#configuration
-			Reveal.initialize({
-				controls: true,
-				progress: true,
-				history: true,
-				center: true,
+            // Full list of configuration options available here:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
 
-				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
                 //transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
                 transition: Reveal.getQueryHash().transition || 'page', // default/cube/page/concave/zoom/linear/none
 
-				// Optional libraries used to extend on reveal.js
-				dependencies: [
-					{ src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-					{ src: 'reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-					{ src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
-					// { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
-				]
-			});
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                    { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                    // { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+                ]
+            });
 
-		</script>
+        </script>
         <script type="text/javascript">
 
             var _gaq = _gaq || [];
@@ -911,5 +919,5 @@ $recentVisitors = $collection->matching($criteria);</code></pre>
             })();
 
         </script>
-	</body>
+    </body>
 </html>
