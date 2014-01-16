@@ -486,7 +486,11 @@ class User {
                         <h3><span class="doctrine-color">Associations</span> - Address</h3>
                         <pre><code contenteditable>/** @ORM\Entity */
 class Address {
-    /* @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue(strategy="AUTO") */
+    /**
+    * @ORM\Id
+    * @ORM\GeneratedValue(strategy="AUTO")
+    * @ORM\Column(type="integer")
+    */
     protected $id;
 
     /** @ORM\Column(type="string") */
@@ -502,7 +506,11 @@ class Address {
                         <h3><span class="doctrine-color">Associations</span> - Projects</h3>
 <pre><code contenteditable>/** @ORM\Entity */
 class Project {
-    /* @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue(strategy="AUTO") */
+    /**
+    * @ORM\Id
+    * @ORM\GeneratedValue(strategy="AUTO")
+    * @ORM\Column(type="integer")
+    */
     protected $id;
 
     /** @ORM\Column(type="string") */
